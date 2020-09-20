@@ -23,6 +23,7 @@ Col.defaultProps = {
 Col.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
     PropTypes.string,
   ]),
   flex: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
