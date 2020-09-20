@@ -39,5 +39,8 @@
   },
   "devDependencies": {
     "@types/prop-types": "^15.7.3"
+  },
+  "_moduleAliases": {
+    "@Elements/Gird/Row": "Elements/Grid/Row"
   }
 }

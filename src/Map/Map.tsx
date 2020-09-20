@@ -20,7 +20,7 @@ const Map = (props: MapProps) => {
   const drawGrids = (ctx: CanvasRenderingContext2D) => {
     ctx.fillStyle = "#FFF";
     ctx.strokeStyle = "#555";
-    ctx.lineWidth = 1;
+    ctx.lineWidth = 2;
     ctx.beginPath();
 
     const cellHeight = height / rows;
@@ -38,8 +38,7 @@ const Map = (props: MapProps) => {
     }
     ctx.stroke();
   };
-
-  useEffect(() => {
+  const loadMap = () => {
     if (canvasRef.current !== null) {
       const canvas: HTMLCanvasElement = canvasRef.current;
 
@@ -49,7 +48,8 @@ const Map = (props: MapProps) => {
       const context = canvas.getContext("2d") || new CanvasRenderingContext2D();
       drawGrids(context);
     }
-  }, []);
+  };
+  useEffect(loadMap, []);
   return (
     <canvas
       ref={canvasRef}
@@ -68,8 +68,8 @@ Map.defaultProps = {
     height: 1500,
   },
   size: {
-    rows: 70,
-    cols: 110,
+    rows: 40,
+    cols: 40,
   },
 };
 
