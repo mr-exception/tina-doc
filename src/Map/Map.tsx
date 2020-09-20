@@ -69,7 +69,7 @@ Map.defaultProps = {
   },
   size: {
     rows: 40,
-    cols: 40,
+    cols: 50,
   },
 };
 

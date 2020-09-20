@@ -1,0 +1,11 @@
+.button {
+  margin: 5px;
+  height: 35px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border-width: 1px;
+  border-radius: 5px;
+}

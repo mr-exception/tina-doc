@@ -1,23 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import Map from "./Map/Map";
 import Row from "Elements/Grid/Row";
 import Col from "Elements/Grid/Col";
-import TextInput from "Elements/Inputs/Text";
 
 export default () => {
-  const [value, setValue] = useState("");
   return (
     <Row>
-      <Col flex="1">
+      <Col flex="7">
         <Map />
       </Col>
-      <Col flex="1">
-        <TextInput
-          value={value}
-          onTextChange={setValue}
-          placeHolder="some text"
-        />
-      </Col>
+      <Col flex="2"></Col>
     </Row>
   );
 };
