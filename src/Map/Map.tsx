@@ -1,5 +1,6 @@
-import React, { useEffect, useRef } from "react";
-import PropTypes from "prop-types";
+import React, { useEffect, useRef, useState } from "react";
+import PropTypes, { object } from "prop-types";
+import IFood from "Models/Food";
 
 type MapProps = {
   resolution: {
@@ -10,46 +11,74 @@ type MapProps = {
     rows: number;
     cols: number;
   };
+  foods: IFood[];
 };
 
 const Map = (props: MapProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [canvas_context, set_canvas_context] = useState<
+    CanvasRenderingContext2D
+  >();
   const { width, height } = props.resolution;
   const { rows, cols } = props.size;
 
-  const drawGrids = (ctx: CanvasRenderingContext2D) => {
-    ctx.fillStyle = "#FFF";
-    ctx.strokeStyle = "#555";
-    ctx.lineWidth = 2;
-    ctx.beginPath();
+  const getCanvasContext = (): CanvasRenderingContext2D => {
+    if (!canvasRef.current) return new CanvasRenderingContext2D();
+    const canvas: HTMLCanvasElement = canvasRef.current;
+
+    canvas.width = width;
+    canvas.height = height;
+
+    const context = canvas.getContext("2d") || new CanvasRenderingContext2D();
+    return context;
+  };
+  const drawFoods = () => {
+    if (!canvas_context) return;
+
+    const unit_width = width / cols;
+    const unit_height = height / rows;
+    props.foods.forEach((food: IFood) => {
+      canvas_context.fillStyle = "red";
+      canvas_context.lineWidth = 0;
+      canvas_context.beginPath();
+      canvas_context.rect(
+        food.position.x * unit_width,
+        food.position.y * unit_height,
+        unit_width,
+        unit_height
+      );
+      canvas_context.fill();
+    });
+  };
+  const drawGrids = () => {
+    if (!canvas_context) return;
+    canvas_context.fillStyle = "#FFF";
+    canvas_context.strokeStyle = "#555";
+    canvas_context.lineWidth = 2;
+    canvas_context.beginPath();
 
     const cellHeight = height / rows;
     const cellWidth = width / cols;
     for (let i = 0; i < rows; i++) {
       const yOffset = i * cellHeight;
-      ctx.moveTo(0, yOffset);
-      ctx.lineTo(width, yOffset);
+      canvas_context.moveTo(0, yOffset);
+      canvas_context.lineTo(width, yOffset);
     }
 
     for (let i = 0; i < cols; i++) {
       const xOffset = i * cellWidth;
-      ctx.moveTo(xOffset, 0);
-      ctx.lineTo(xOffset, height);
+      canvas_context.moveTo(xOffset, 0);
+      canvas_context.lineTo(xOffset, height);
     }
-    ctx.stroke();
+    canvas_context.stroke();
   };
   const loadMap = () => {
-    if (canvasRef.current !== null) {
-      const canvas: HTMLCanvasElement = canvasRef.current;
-
-      canvas.width = width;
-      canvas.height = height;
-
-      const context = canvas.getContext("2d") || new CanvasRenderingContext2D();
-      drawGrids(context);
-    }
+    set_canvas_context(getCanvasContext());
   };
-  useEffect(loadMap, []);
+
+  useEffect(loadMap, [canvasRef.current]);
+  useEffect(drawGrids, [canvasRef.current]);
+  useEffect(drawFoods, [props.foods.length]);
   return (
     <canvas
       ref={canvasRef}
@@ -71,6 +100,7 @@ Map.defaultProps = {
     rows: 40,
     cols: 50,
   },
+  foods: [],
 };
 
 Map.propTypes = {
@@ -82,6 +112,7 @@ Map.propTypes = {
     rows: PropTypes.number,
     cols: PropTypes.number,
   }),
+  foods: PropTypes.arrayOf(object).isRequired,
 };
 
 export default Map;

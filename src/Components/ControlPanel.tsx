@@ -1,10 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Row from "Elements/Grid/Row";
 import Col from "Elements/Grid/Col";
-import TextInput from "Elements/Inputs/Text";
+import NumberInput from "Elements/Inputs/Number";
 import Button from "Elements/Actions/Button";
+import PropTypes from "prop-types";
 
-export default () => {
+type ControlPanelProps = {
+  configChanged: Function;
+  nextStep: Function;
+  configs: {
+    food_rate: number;
+  };
+};
+const ControlPanel = (props: ControlPanelProps) => {
+  const [food_rate, set_food_rate] = useState(props.configs.food_rate);
+
+  const updateConfigs = () => {
+    props.configChanged({
+      food_rate,
+    });
+  };
+  useEffect(updateConfigs, [food_rate]);
   return (
     <Row>
       <Col>
@@ -15,7 +31,18 @@ export default () => {
         </Row>
         <Row>
           <Col>
-            <TextInput placeHolder="food popularity" />
+            <NumberInput
+              value={food_rate}
+              onNumberChange={(value: number) => {
+                set_food_rate(value);
+              }}
+              placeHolder="food popularity"
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Button onClick={(e) => props.nextStep()}>next step</Button>
           </Col>
         </Row>
         <Row>
@@ -33,3 +60,21 @@ export default () => {
     </Row>
   );
 };
+
+ControlPanel.defaultProps = {
+  configChanged: () => {},
+  nextStep: () => {},
+  configs: {
+    food_rate: 8,
+  },
+};
+
+ControlPanel.propTypes = {
+  configChanged: PropTypes.func.isRequired,
+  nextStep: PropTypes.func.isRequired,
+  configs: PropTypes.shape({
+    food_rate: PropTypes.number,
+  }).isRequired,
+};
+
+export default ControlPanel;
