@@ -11,3 +11,8 @@
   font-size: 14px;
   font-weight: bold;
 }
+
+select.input {
+  height: 40px;
+  width: calc(100% - 10px);
+}

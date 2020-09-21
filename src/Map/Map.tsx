@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import IFood from "Models/Food";
+import ICell from "Models/Cell";
 
 type IMap = {
   width?: number;
@@ -7,6 +8,7 @@ type IMap = {
   rows?: number;
   cols?: number;
   foods: IFood[];
+  cells: ICell[];
 };
 const Map: React.FC<IMap> = ({
   width = 1500,
@@ -14,6 +16,7 @@ const Map: React.FC<IMap> = ({
   rows = 40,
   cols = 50,
   foods,
+  cells,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [canvas_context, set_canvas_context] = useState<
@@ -30,30 +33,42 @@ const Map: React.FC<IMap> = ({
     const context = canvas.getContext("2d") || new CanvasRenderingContext2D();
     return context;
   };
-  const drawFoods = () => {
+  const fillUnit = (x: number, y: number, color: string) => {
     if (!canvas_context) return;
-
     const unit_width = width / cols;
     const unit_height = height / rows;
+    canvas_context.fillStyle = color;
+    canvas_context.lineWidth = 0;
+    canvas_context.beginPath();
+    canvas_context.rect(
+      x * unit_width,
+      y * unit_height,
+      unit_width,
+      unit_height
+    );
+    canvas_context.fill();
+  };
+  const drawFoods = () => {
     foods.forEach((food: IFood) => {
-      canvas_context.fillStyle = "red";
-      canvas_context.lineWidth = 0;
-      canvas_context.beginPath();
-      canvas_context.rect(
-        food.position.x * unit_width,
-        food.position.y * unit_height,
-        unit_width,
-        unit_height
-      );
-      canvas_context.fill();
+      fillUnit(food.position.x, food.position.y, "red");
+    });
+  };
+  const drawCells = () => {
+    cells.forEach((cell: ICell) => {
+      fillUnit(cell.position.x, cell.position.y, "yellow");
     });
   };
   const drawGrids = () => {
     if (!canvas_context) return;
+    // clear the canvas
+    canvas_context.fillStyle = "#000";
+    canvas_context.beginPath();
+    canvas_context.fillRect(0, 0, width + 100, height + 100);
+
+    // start drawing the lines
     canvas_context.fillStyle = "#FFF";
     canvas_context.strokeStyle = "#555";
     canvas_context.lineWidth = 2;
-    canvas_context.beginPath();
 
     const cellHeight = height / rows;
     const cellWidth = width / cols;
@@ -73,10 +88,18 @@ const Map: React.FC<IMap> = ({
   const loadMap = () => {
     set_canvas_context(getCanvasContext());
   };
+  const renderMap = () => {
+    drawGrids();
+    drawFoods();
+    drawCells();
+  };
 
   useEffect(loadMap, [canvasRef.current]);
-  useEffect(drawGrids, [canvasRef.current]);
-  useEffect(drawFoods, [foods.length]);
+  useEffect(renderMap, [
+    canvasRef.current,
+    JSON.stringify(foods),
+    JSON.stringify(cells),
+  ]);
   return (
     <canvas
       ref={canvasRef}
