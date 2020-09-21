@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Map from "./Map/Map";
 import Row from "Elements/Grid/Row";
 import Col from "Elements/Grid/Col";
@@ -12,11 +12,15 @@ const default_cols: number = 75;
 export default () => {
   const [configs, set_configs] = useState({
     food_rate: 10,
+    food_period: 10,
     cell_rate: 2,
+    cell_period: 10,
     speed: 1000,
   });
   const [run_state, set_run_state] = useState("not_running");
   const [cycle, set_cycle] = useState(0);
+  const cycle_ref = useRef(cycle);
+  cycle_ref.current = cycle;
 
   // food generation and data
   const [foods, set_foods] = useState<IFood[]>([]);
@@ -54,8 +58,8 @@ export default () => {
   };
 
   const runNextStep = () => {
-    generateFoods();
-    generateCells();
+    if (cycle_ref.current % configs.food_period === 0) generateFoods();
+    if (cycle_ref.current % configs.cell_period === 0) generateCells();
     set_cycle((cycle) => cycle + 1);
   };
 

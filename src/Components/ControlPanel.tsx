@@ -14,7 +14,9 @@ interface IControlPanel {
   cycle: number;
   configs: {
     food_rate: number;
+    food_period: number;
     cell_rate: number;
+    cell_period: number;
     speed: number;
   };
 }
@@ -30,13 +32,21 @@ const ControlPanel: React.FC<IControlPanel> = ({
   configs,
 }) => {
   const [food_rate, set_food_rate] = useState(configs.food_rate);
+  const [food_period, set_food_period] = useState(configs.food_period);
+
   const [cell_rate, set_cell_rate] = useState(configs.cell_rate);
+  const [cell_period, set_cell_period] = useState(configs.cell_period);
+
   const [speed, set_speed] = useState(configs.speed);
 
   const updateConfigs = () => {
     configChanged({
       food_rate,
+      food_period,
+
       cell_rate,
+      cell_period,
+
       speed,
     });
   };
@@ -56,7 +66,17 @@ const ControlPanel: React.FC<IControlPanel> = ({
               onChange={(value: number) => {
                 set_food_rate(value);
               }}
-              title="food produce rate (food/cycle)"
+              title="food produce rate"
+              placeHolder="1"
+            />
+          </Col>
+          <Col>
+            <NumberInput
+              value={food_period}
+              onChange={(value: number) => {
+                set_food_period(value);
+              }}
+              title="per cycle"
               placeHolder="1"
             />
           </Col>
@@ -68,7 +88,17 @@ const ControlPanel: React.FC<IControlPanel> = ({
               onChange={(value: number) => {
                 set_cell_rate(value);
               }}
-              title="cell produce rate (cell/cycle)"
+              title="cell produce rate"
+              placeHolder="1"
+            />
+          </Col>
+          <Col>
+            <NumberInput
+              value={cell_period}
+              onChange={(value: number) => {
+                set_cell_period(value);
+              }}
+              title="per cycle"
               placeHolder="1"
             />
           </Col>
