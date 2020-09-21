@@ -11,6 +11,7 @@ const default_cols: number = 75;
 export default () => {
   const [configs, set_configs] = useState({
     food_rate: 10,
+    cell_rate: 2,
   });
 
   // food generation and data

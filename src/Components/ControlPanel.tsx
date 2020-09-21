@@ -9,10 +9,12 @@ interface IControlPanel {
   nextStep: Function;
   configs: {
     food_rate: number;
+    cell_rate: number;
   };
 }
 const ControlPanel: React.FC<IControlPanel> = (props) => {
   const [food_rate, set_food_rate] = useState(props.configs.food_rate);
+  const [cell_rate, set_cell_rate] = useState(props.configs.cell_rate);
 
   const updateConfigs = () => {
     props.configChanged({
@@ -35,7 +37,20 @@ const ControlPanel: React.FC<IControlPanel> = (props) => {
               onNumberChange={(value: number) => {
                 set_food_rate(value);
               }}
-              placeHolder="food popularity"
+              title="food produce rate (food/cycle)"
+              placeHolder="1"
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <NumberInput
+              value={cell_rate}
+              onNumberChange={(value: number) => {
+                set_cell_rate(value);
+              }}
+              title="cell produce rate (cell/cycle)"
+              placeHolder="1"
             />
           </Col>
         </Row>
