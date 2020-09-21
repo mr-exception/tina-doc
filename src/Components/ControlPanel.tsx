@@ -11,6 +11,7 @@ interface IControlPanel {
   start: Function;
   stop: Function;
   reset: Function;
+  cycle: number;
   configs: {
     food_rate: number;
     cell_rate: number;
@@ -19,6 +20,7 @@ interface IControlPanel {
 }
 const ControlPanel: React.FC<IControlPanel> = ({
   configChanged,
+  cycle,
 
   nextStep,
   start,
@@ -74,6 +76,11 @@ const ControlPanel: React.FC<IControlPanel> = ({
         <Row>
           <Col>
             <Button onClick={(e) => nextStep()}>next step</Button>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <h4 className="text-center">cycle: {cycle}</h4>
           </Col>
         </Row>
         <Row>

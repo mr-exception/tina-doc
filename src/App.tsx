@@ -56,6 +56,7 @@ export default () => {
   const runNextStep = () => {
     generateFoods();
     generateCells();
+    set_cycle((cycle) => cycle + 1);
   };
 
   const [interval, set_interval] = useState<NodeJS.Timeout>();
@@ -75,12 +76,13 @@ export default () => {
     set_cells([]);
     stop();
   };
-  useEffect(() => {
+  const speedChanged = () => {
     if (run_state === "running") {
       stop();
       start();
     }
-  }, [configs.speed]);
+  };
+  useEffect(speedChanged, [configs.speed]);
   return (
     <Row>
       <Col flex="7">
@@ -93,6 +95,7 @@ export default () => {
       </Col>
       <Col flex="2">
         <ControlPanel
+          cycle={cycle}
           configChanged={set_configs}
           nextStep={runNextStep}
           start={start}
