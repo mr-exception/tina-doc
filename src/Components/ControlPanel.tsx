@@ -34,7 +34,7 @@ const ControlPanel: React.FC<IControlPanel> = (props) => {
           <Col>
             <NumberInput
               value={food_rate}
-              onNumberChange={(value: number) => {
+              onChange={(value: number) => {
                 set_food_rate(value);
               }}
               title="food produce rate (food/cycle)"
@@ -46,7 +46,7 @@ const ControlPanel: React.FC<IControlPanel> = (props) => {
           <Col>
             <NumberInput
               value={cell_rate}
-              onNumberChange={(value: number) => {
+              onChange={(value: number) => {
                 set_cell_rate(value);
               }}
               title="cell produce rate (cell/cycle)"

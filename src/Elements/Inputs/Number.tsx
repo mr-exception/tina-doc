@@ -3,17 +3,12 @@ import "./Inputs.css";
 
 type INumber = {
   value: number;
-  onNumberChange: (value: number) => void;
+  onChange: (value: number) => void;
   placeHolder: string;
   title: string;
 };
 
-const Number: React.FC<INumber> = ({
-  value,
-  onNumberChange,
-  placeHolder,
-  title,
-}) => {
+const Number: React.FC<INumber> = ({ value, onChange, placeHolder, title }) => {
   return (
     <div>
       <label className="label">{title}</label>
@@ -22,7 +17,7 @@ const Number: React.FC<INumber> = ({
         type="number"
         value={value}
         onChange={(e) => {
-          onNumberChange(parseInt(e.target.value));
+          onChange(parseInt(e.target.value));
         }}
         placeholder={placeHolder}
       />
