@@ -5,10 +5,8 @@ import Col from "Elements/Grid/Col";
 import ControlPanel from "Components/ControlPanel";
 import IFood from "Models/Food";
 
-const default_world_size = {
-  rows: 60,
-  cols: 75,
-};
+const default_rows: number = 60;
+const default_cols: number = 75;
 
 export default () => {
   const [configs, set_configs] = useState({
@@ -20,8 +18,8 @@ export default () => {
   const generateFoods = () => {
     const results: IFood[] = [];
     for (let i = 0; i < configs.food_rate; i++) {
-      const x = Math.floor(Math.random() * default_world_size.cols);
-      const y = Math.floor(Math.random() * default_world_size.rows);
+      const x = Math.floor(Math.random() * default_cols);
+      const y = Math.floor(Math.random() * default_rows);
       results.push({
         position: { x, y },
         value: Math.ceil(Math.random() * 100),
@@ -37,7 +35,7 @@ export default () => {
   return (
     <Row>
       <Col flex="7">
-        <Map size={default_world_size} foods={foods} />
+        <Map rows={default_rows} cols={default_cols} foods={foods} />
       </Col>
       <Col flex="2">
         <ControlPanel

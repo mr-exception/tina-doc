@@ -1,37 +1,24 @@
 import React from "react";
-import PropTypes from "prop-types";
 import "./Inputs.css";
 
-type NumberProps = {
+type INumber = {
   value: number;
-  onNumberChange: Function;
+  onNumberChange: (value: number) => void;
   placeHolder: string;
 };
 
-const Number = (props: NumberProps) => {
+const Number: React.FC<INumber> = ({ value, onNumberChange, placeHolder }) => {
   return (
     <input
       className="input"
       type="number"
-      value={props.value}
+      value={value}
       onChange={(e) => {
-        props.onNumberChange(parseInt(e.target.value));
+        onNumberChange(parseInt(e.target.value));
       }}
-      placeholder={props.placeHolder}
+      placeholder={placeHolder}
     />
   );
-};
-
-Number.defaultProps = {
-  value: 0,
-  onNumberChange: () => {},
-  placeHolder: "",
-};
-
-Number.propTypes = {
-  value: PropTypes.number,
-  onNumberChange: PropTypes.func,
-  placeHolder: PropTypes.string,
 };
 
 export default Number;

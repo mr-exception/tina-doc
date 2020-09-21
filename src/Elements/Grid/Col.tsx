@@ -1,32 +1,16 @@
 import React from "react";
-import PropTypes from "prop-types";
 import "./Grid.css";
 
-type ColProps = {
-  children: JSX.Element | JSX.Element[] | string | null;
-  flex: number | string;
-};
+interface IColProps {
+  children?: JSX.Element | JSX.Element[] | string | null;
+  flex?: number | string;
+}
 
-const Col = (props: ColProps) => {
+const Col: React.FC<IColProps> = ({ flex = 1, children = "" }) => {
   return (
-    <div className="col" style={{ flex: props.flex }}>
-      {props.children}
+    <div className="col" style={{ flex: flex }}>
+      {children}
     </div>
   );
 };
-
-Col.defaultProps = {
-  children: "",
-  flex: 1,
-};
-
-Col.propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node,
-    PropTypes.string,
-  ]),
-  flex: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-};
-
 export default Col;

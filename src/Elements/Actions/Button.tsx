@@ -1,34 +1,17 @@
 import React from "react";
-import PropTypes from "prop-types";
 import "./Actions.css";
 
-type ButtonProps = {
+interface IButton {
   children: string;
-  onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-};
+  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+}
 
-const Button = (props: ButtonProps) => {
+const Button: React.FC<IButton> = ({ onClick, children }) => {
   return (
-    <button className="button" onClick={props.onClick}>
-      {props.children}
+    <button className="button" onClick={onClick}>
+      {children}
     </button>
   );
-};
-
-Button.defaultProps = {
-  children: "",
-  onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    console.log("on click!");
-  },
-};
-
-Button.propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node,
-    PropTypes.string,
-  ]),
-  onClick: PropTypes.func,
 };
 
 export default Button;

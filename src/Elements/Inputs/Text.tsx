@@ -1,36 +1,23 @@
 import React from "react";
-import PropTypes from "prop-types";
 import "./Inputs.css";
 
-type TextProps = {
+interface IText {
   value: string;
   onTextChange: Function;
   placeHolder: string;
-};
+}
 
-const Text = (props: TextProps) => {
+const Text: React.FC<IText> = ({ value, onTextChange, placeHolder }) => {
   return (
     <input
       className="input"
-      value={props.value}
+      value={value}
       onChange={(e) => {
-        props.onTextChange(e.target.value);
+        onTextChange(e.target.value);
       }}
-      placeholder={props.placeHolder}
+      placeholder={placeHolder}
     />
   );
-};
-
-Text.defaultProps = {
-  value: "",
-  onTextChange: () => {},
-  placeHolder: "",
-};
-
-Text.propTypes = {
-  value: PropTypes.string,
-  onTextChange: PropTypes.func,
-  placeHolder: PropTypes.string,
 };
 
 export default Text;

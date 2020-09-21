@@ -1,26 +1,24 @@
 import React, { useEffect, useRef, useState } from "react";
-import PropTypes, { object } from "prop-types";
 import IFood from "Models/Food";
 
-type MapProps = {
-  resolution: {
-    width: number;
-    height: number;
-  };
-  size: {
-    rows: number;
-    cols: number;
-  };
+type IMap = {
+  width?: number;
+  height?: number;
+  rows?: number;
+  cols?: number;
   foods: IFood[];
 };
-
-const Map = (props: MapProps) => {
+const Map: React.FC<IMap> = ({
+  width = 1500,
+  height = 1500,
+  rows = 40,
+  cols = 50,
+  foods,
+}) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [canvas_context, set_canvas_context] = useState<
     CanvasRenderingContext2D
   >();
-  const { width, height } = props.resolution;
-  const { rows, cols } = props.size;
 
   const getCanvasContext = (): CanvasRenderingContext2D => {
     if (!canvasRef.current) return new CanvasRenderingContext2D();
@@ -37,7 +35,7 @@ const Map = (props: MapProps) => {
 
     const unit_width = width / cols;
     const unit_height = height / rows;
-    props.foods.forEach((food: IFood) => {
+    foods.forEach((food: IFood) => {
       canvas_context.fillStyle = "red";
       canvas_context.lineWidth = 0;
       canvas_context.beginPath();
@@ -78,7 +76,7 @@ const Map = (props: MapProps) => {
 
   useEffect(loadMap, [canvasRef.current]);
   useEffect(drawGrids, [canvasRef.current]);
-  useEffect(drawFoods, [props.foods.length]);
+  useEffect(drawFoods, [foods.length]);
   return (
     <canvas
       ref={canvasRef}
@@ -89,30 +87,6 @@ const Map = (props: MapProps) => {
       }}
     />
   );
-};
-
-Map.defaultProps = {
-  resolution: {
-    width: 1500,
-    height: 1500,
-  },
-  size: {
-    rows: 40,
-    cols: 50,
-  },
-  foods: [],
-};
-
-Map.propTypes = {
-  resolution: PropTypes.shape({
-    width: PropTypes.number,
-    height: PropTypes.number,
-  }),
-  size: PropTypes.shape({
-    rows: PropTypes.number,
-    cols: PropTypes.number,
-  }),
-  foods: PropTypes.arrayOf(object).isRequired,
 };
 
 export default Map;
