@@ -21,7 +21,6 @@ const Select: React.FC<ISelect> = ({ value, onChange, title, options }) => {
         className="input"
         defaultValue={value}
         onChange={(e) => {
-          console.log(e.target.value);
           onChange(e.target.value);
         }}
       >

@@ -4,24 +4,18 @@ import Col from "Elements/Grid/Col";
 import NumberInput from "Elements/Inputs/Number";
 import SelectInput from "Elements/Inputs/Select";
 import Button from "Elements/Actions/Button";
+import { IWorldConfig } from "Models/WorldFunctions";
 
 interface IControlPanel {
-  configChanged: Function;
+  configChanged: (configs: IWorldConfig) => void;
   nextStep: Function;
   start: Function;
   stop: Function;
   reset: Function;
   cycle: number;
-  configs: {
-    food_rate: number;
-    food_period: number;
-    cell_rate: number;
-    cell_period: number;
-    speed: number;
-  };
+  configs: IWorldConfig;
 }
 const ControlPanel: React.FC<IControlPanel> = ({
-  configChanged,
   cycle,
 
   nextStep,
@@ -29,6 +23,7 @@ const ControlPanel: React.FC<IControlPanel> = ({
   stop,
   reset,
 
+  configChanged,
   configs,
 }) => {
   const [food_rate, set_food_rate] = useState(configs.food_rate);
@@ -48,6 +43,8 @@ const ControlPanel: React.FC<IControlPanel> = ({
       cell_period,
 
       speed,
+
+      size: configs.size,
     });
   };
   useEffect(updateConfigs, [food_rate, cell_rate, speed]);

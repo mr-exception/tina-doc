@@ -5,61 +5,40 @@ import Col from "Elements/Grid/Col";
 import ControlPanel from "Components/ControlPanel";
 import IFood from "Models/Food";
 import ICell from "Models/Cell";
-
-const default_rows: number = 60;
-const default_cols: number = 75;
+import {
+  generateCells,
+  generateFoods,
+  IWorldConfig,
+} from "Models/WorldFunctions";
 
 export default () => {
-  const [configs, set_configs] = useState({
+  // dynamic and core data states
+  const [foods, set_foods] = useState<IFood[]>([]);
+  const [cells, set_cells] = useState<ICell[]>([]);
+
+  // state and static data states
+  const [run_state, set_run_state] = useState("not_running");
+  const [cycle, set_cycle] = useState(0);
+  const cycle_ref = useRef(cycle);
+  cycle_ref.current = cycle;
+  const [configs, set_configs] = useState<IWorldConfig>({
     food_rate: 10,
     food_period: 10,
     cell_rate: 2,
     cell_period: 10,
     speed: 1000,
+    size: {
+      cols: 60,
+      rows: 75,
+    },
   });
-  const [run_state, set_run_state] = useState("not_running");
-  const [cycle, set_cycle] = useState(0);
-  const cycle_ref = useRef(cycle);
-  cycle_ref.current = cycle;
 
-  // food generation and data
-  const [foods, set_foods] = useState<IFood[]>([]);
-  const generateFoods = () => {
-    const results: IFood[] = [];
-    for (let i = 0; i < configs.food_rate; i++) {
-      const x = Math.floor(Math.random() * default_cols);
-      const y = Math.floor(Math.random() * default_rows);
-      results.push({
-        position: { x, y },
-        value: Math.ceil(Math.random() * 100),
-        price: Math.ceil(Math.random() * 50),
-      });
-    }
-    set_foods((foods) => foods.concat(results));
-  };
-  // cell generation and data
-  const [cells, set_cells] = useState<ICell[]>([]);
-  const generateCells = () => {
-    const results: ICell[] = [];
-    for (let i = 0; i < configs.cell_rate; i++) {
-      const x = Math.floor(Math.random() * default_cols);
-      const y = Math.floor(Math.random() * default_rows);
-      results.push({
-        position: { x, y },
-        abillities: {
-          move: Math.ceil(Math.random() * 100),
-          stick: Math.ceil(Math.random() * 100),
-          decompose: Math.ceil(Math.random() * 100),
-        },
-        fuel: Math.ceil(Math.random() * 100),
-      });
-    }
-    set_cells((cells) => cells.concat(results));
-  };
-
+  // runtime control functions
   const runNextStep = () => {
-    if (cycle_ref.current % configs.food_period === 0) generateFoods();
-    if (cycle_ref.current % configs.cell_period === 0) generateCells();
+    if (cycle_ref.current % configs.food_period === 0)
+      generateFoods(configs, set_foods);
+    if (cycle_ref.current % configs.cell_period === 0)
+      generateCells(configs, set_cells);
     set_cycle((cycle) => cycle + 1);
   };
 
@@ -91,8 +70,8 @@ export default () => {
     <Row>
       <Col flex="7">
         <Map
-          rows={default_rows}
-          cols={default_cols}
+          rows={configs.size.rows}
+          cols={configs.size.cols}
           foods={foods}
           cells={cells}
         />
