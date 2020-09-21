@@ -1,8 +1,7 @@
+import { IPosition } from "./Position";
+
 export default interface IFood {
-  position: {
-    x: number;
-    y: number;
-  };
+  position: IPosition;
   value: number;
   price: number;
 }

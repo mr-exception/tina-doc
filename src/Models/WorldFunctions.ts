@@ -1,5 +1,6 @@
 import ICell from "./Cell";
 import IFood from "./Food";
+import { calcDistance } from "./Position";
 
 export interface IWorldConfig {
   food_rate: number;
@@ -23,8 +24,8 @@ export const generateFoods = (
     const y = Math.floor(Math.random() * configs.size.rows);
     results.push({
       position: { x, y },
-      value: Math.ceil(Math.random() * 100),
-      price: Math.ceil(Math.random() * 50),
+      value: Math.ceil(Math.random() * 2000),
+      price: Math.ceil(Math.random() * 100),
     });
   }
   set_foods((foods) => foods.concat(results));
@@ -45,8 +46,29 @@ export const generateCells = (
         stick: Math.ceil(Math.random() * 100),
         decompose: Math.ceil(Math.random() * 100),
       },
-      fuel: Math.ceil(Math.random() * 100),
+      fuel: Math.ceil(Math.random() * 2000),
     });
   }
   set_cells((cells) => cells.concat(results));
+};
+
+// const findBestFood = (cell: ICell, foods: IFood[] = []): IFood | undefined => {
+//   return foods
+//     .map((food: IFood) => {
+//       const distance = calcDistance(cell.position, food.position);
+//       return food;
+//     })
+//     .pop();
+// };
+
+export const singleCycle = (
+  cycle: number,
+  set_cycle: React.Dispatch<React.SetStateAction<number>>,
+  configs: IWorldConfig,
+  set_foods: React.Dispatch<React.SetStateAction<IFood[]>>,
+  set_cells: React.Dispatch<React.SetStateAction<ICell[]>>
+) => {
+  if (cycle % configs.food_period === 0) generateFoods(configs, set_foods);
+  if (cycle % configs.cell_period === 0) generateCells(configs, set_cells);
+  set_cycle((cycle) => cycle + 1);
 };

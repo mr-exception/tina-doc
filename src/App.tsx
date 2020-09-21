@@ -5,11 +5,7 @@ import Col from "Elements/Grid/Col";
 import ControlPanel from "Components/ControlPanel";
 import IFood from "Models/Food";
 import ICell from "Models/Cell";
-import {
-  generateCells,
-  generateFoods,
-  IWorldConfig,
-} from "Models/WorldFunctions";
+import { IWorldConfig, singleCycle } from "Models/WorldFunctions";
 
 export default () => {
   // dynamic and core data states
@@ -35,13 +31,8 @@ export default () => {
 
   // runtime control functions
   const runNextStep = () => {
-    if (cycle_ref.current % configs.food_period === 0)
-      generateFoods(configs, set_foods);
-    if (cycle_ref.current % configs.cell_period === 0)
-      generateCells(configs, set_cells);
-    set_cycle((cycle) => cycle + 1);
+    singleCycle(cycle_ref.current, set_cycle, configs, set_foods, set_cells);
   };
-
   const [interval, set_interval] = useState<NodeJS.Timeout>();
   const start = () => {
     const intvl = setInterval(runNextStep, configs.speed);

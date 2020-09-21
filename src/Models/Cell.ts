@@ -1,8 +1,7 @@
+import { IPosition } from "./Position";
+
 export default interface ICell {
-  position: {
-    x: number;
-    y: number;
-  };
+  position: IPosition;
   abillities: {
     move: number; // [0-100]
     decompose: number; // [0-100]
