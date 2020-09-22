@@ -132,6 +132,7 @@ const ControlPanel: React.FC<IControlPanel> = ({
                 { value: 500, label: "x2" },
                 { value: 250, label: "x4" },
                 { value: 125, label: "x8" },
+                { value: 62, label: "x16" },
               ]}
             />
           </Col>

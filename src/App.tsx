@@ -10,7 +10,11 @@ import { IWorldConfig, singleCycle } from "Models/WorldFunctions";
 export default () => {
   // dynamic and core data states
   const [foods, set_foods] = useState<IFood[]>([]);
+  const foods_ref = useRef(foods);
+  foods_ref.current = foods;
   const [cells, set_cells] = useState<ICell[]>([]);
+  const cells_ref = useRef(cells);
+  cells_ref.current = cells;
 
   // state and static data states
   const [run_state, set_run_state] = useState("not_running");
@@ -25,13 +29,23 @@ export default () => {
     speed: 1000,
     size: {
       cols: 60,
-      rows: 75,
+      rows: 50,
     },
   });
+  const configs_ref = useRef(configs);
+  configs_ref.current = configs;
 
   // runtime control functions
   const runNextStep = () => {
-    singleCycle(cycle_ref.current, set_cycle, configs, set_foods, set_cells);
+    singleCycle(
+      cycle_ref.current,
+      set_cycle,
+      configs_ref.current,
+      foods_ref.current,
+      cells_ref.current,
+      set_foods,
+      set_cells
+    );
   };
   const [interval, set_interval] = useState<NodeJS.Timeout>();
   const start = () => {
