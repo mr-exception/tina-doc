@@ -3,6 +3,7 @@ import Row from "Elements/Grid/Row";
 import Col from "Elements/Grid/Col";
 import NumberInput from "Elements/Inputs/Number";
 import SelectInput from "Elements/Inputs/Select";
+import CheckBoxInput from "Elements/Inputs/CheckBox";
 import Button from "Elements/Actions/Button";
 import { IWorldConfig } from "Models/WorldFunctions";
 
@@ -34,6 +35,8 @@ const ControlPanel: React.FC<IControlPanel> = ({
 
   const [speed, set_speed] = useState(configs.speed);
 
+  const [show_grids, set_show_grids] = useState(configs.show_grids);
+
   const updateConfigs = () => {
     configChanged({
       food_rate,
@@ -45,9 +48,10 @@ const ControlPanel: React.FC<IControlPanel> = ({
       speed,
 
       size: configs.size,
+      show_grids,
     });
   };
-  useEffect(updateConfigs, [food_rate, cell_rate, speed]);
+  useEffect(updateConfigs, [food_rate, cell_rate, speed, show_grids]);
   return (
     <Row>
       <Col>
@@ -97,6 +101,17 @@ const ControlPanel: React.FC<IControlPanel> = ({
               }}
               title="per cycle"
               placeHolder="1"
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <CheckBoxInput
+              value={show_grids}
+              onChange={(value: boolean) => {
+                set_show_grids(value);
+              }}
+              title="show grids"
             />
           </Col>
         </Row>

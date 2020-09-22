@@ -15,6 +15,7 @@ export interface IWorldConfig {
     cols: number;
     rows: number;
   };
+  show_grids: boolean;
 }
 
 export const generateFoods = (configs: IWorldConfig): IFood[] => {

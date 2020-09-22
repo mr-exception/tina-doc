@@ -9,6 +9,7 @@ type IMap = {
   cols?: number;
   foods: IFood[];
   cells: ICell[];
+  showGrids?: boolean;
 };
 const Map: React.FC<IMap> = ({
   width = 1500,
@@ -17,6 +18,7 @@ const Map: React.FC<IMap> = ({
   cols = 50,
   foods,
   cells,
+  showGrids = true,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [canvas_context, set_canvas_context] = useState<
@@ -58,13 +60,14 @@ const Map: React.FC<IMap> = ({
       fillUnit(cell.position.x, cell.position.y, "yellow");
     });
   };
-  const drawGrids = () => {
+  const clearCanvas = () => {
     if (!canvas_context) return;
-    // clear the canvas
     canvas_context.fillStyle = "#000";
     canvas_context.beginPath();
     canvas_context.fillRect(0, 0, width + 100, height + 100);
-
+  };
+  const drawGrids = () => {
+    if (!canvas_context) return;
     // start drawing the lines
     canvas_context.fillStyle = "#FFF";
     canvas_context.strokeStyle = "#555";
@@ -89,7 +92,8 @@ const Map: React.FC<IMap> = ({
     set_canvas_context(getCanvasContext());
   };
   const renderMap = () => {
-    drawGrids();
+    clearCanvas();
+    if (showGrids) drawGrids();
     drawFoods();
     drawCells();
   };
@@ -99,6 +103,7 @@ const Map: React.FC<IMap> = ({
     canvasRef.current,
     JSON.stringify(foods),
     JSON.stringify(cells),
+    showGrids,
   ]);
   return (
     <canvas

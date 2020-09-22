@@ -31,6 +31,7 @@ export default () => {
       cols: 60,
       rows: 50,
     },
+    show_grids: true,
   });
   const configs_ref = useRef(configs);
   configs_ref.current = configs;
@@ -79,6 +80,7 @@ export default () => {
           cols={configs.size.cols}
           foods={foods}
           cells={cells}
+          showGrids={configs.show_grids}
         />
       </Col>
       <Col flex="2">

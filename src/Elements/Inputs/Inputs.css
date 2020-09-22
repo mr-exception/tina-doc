@@ -16,3 +16,14 @@ select.input {
   height: 40px;
   width: calc(100% - 10px);
 }
+
+.check-box {
+  padding-top: 10px;
+}
+.check-box > .label {
+  vertical-align: top;
+}
+.check-box > .input {
+  margin-top: 0px;
+  width: auto;
+}
