@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import IFood from "Models/Food";
 import ICell from "Models/Cell";
+import "./Map.css";
+import InfoPopup from "./InfoPopup";
 
 type IMap = {
   width?: number;
@@ -10,6 +12,7 @@ type IMap = {
   foods: IFood[];
   cells: ICell[];
   showGrids?: boolean;
+  id?: string;
 };
 const Map: React.FC<IMap> = ({
   width = 1500,
@@ -19,6 +22,7 @@ const Map: React.FC<IMap> = ({
   foods,
   cells,
   showGrids = true,
+  id = "canvas",
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [canvas_context, set_canvas_context] = useState<
@@ -92,10 +96,40 @@ const Map: React.FC<IMap> = ({
     set_canvas_context(getCanvasContext());
   };
   const renderMap = () => {
+    console.log("rendering");
     clearCanvas();
     if (showGrids) drawGrids();
     drawFoods();
     drawCells();
+  };
+
+  const [show_info_popup, set_show_info_popup] = useState(false);
+  const [info_popup_position, set_info_popup_position] = useState({
+    x: 0,
+    y: 0,
+    col: 0,
+    row: 0,
+  });
+  const togglePopup = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (!show_info_popup) {
+      const client_width = document.getElementById(id)?.clientWidth || 1;
+      const x = event.nativeEvent.offsetX;
+      const position_x = Math.floor((x / client_width) * cols);
+
+      const client_height = document.getElementById(id)?.clientHeight || 1;
+      const y = event.nativeEvent.offsetY;
+      const position_y = Math.floor((y / client_height) * rows);
+
+      set_info_popup_position({
+        col: position_x,
+        row: position_y,
+        x: (position_x + 1) * (client_width / cols),
+        y: (position_y + 1) * (client_height / rows),
+      });
+      set_show_info_popup((show_info_popup) => true);
+    } else {
+      set_show_info_popup((show_info_popup) => false);
+    }
   };
 
   useEffect(loadMap, [canvasRef.current]);
@@ -105,15 +139,45 @@ const Map: React.FC<IMap> = ({
     JSON.stringify(cells),
     showGrids,
   ]);
+
+  const selected_cell = cells
+    .filter((cell: ICell) => {
+      if (
+        info_popup_position.col === cell.position.x &&
+        info_popup_position.row === cell.position.y
+      )
+        return cell;
+      return null;
+    })
+    .pop();
+  const selected_food = foods
+    .filter((food: IFood) => {
+      if (
+        info_popup_position.col === food.position.x &&
+        info_popup_position.row === food.position.y
+      )
+        return food;
+      return null;
+    })
+    .pop();
   return (
-    <canvas
-      ref={canvasRef}
-      style={{
-        height: "100vh",
-        width: "100%",
-        background: "black",
-      }}
-    />
+    <div className="map" onMouseDown={togglePopup}>
+      <canvas
+        id={id}
+        ref={canvasRef}
+        style={{
+          height: "100vh",
+          width: "100%",
+          background: "black",
+        }}
+      />
+      <InfoPopup
+        show={show_info_popup}
+        position={info_popup_position}
+        selected_cell={selected_cell}
+        selected_food={selected_food}
+      />
+    </div>
   );
 };
 
