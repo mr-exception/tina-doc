@@ -96,7 +96,6 @@ const Map: React.FC<IMap> = ({
     set_canvas_context(getCanvasContext());
   };
   const renderMap = () => {
-    console.log("rendering");
     clearCanvas();
     if (showGrids) drawGrids();
     drawFoods();
@@ -110,26 +109,25 @@ const Map: React.FC<IMap> = ({
     col: 0,
     row: 0,
   });
-  const togglePopup = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    if (!show_info_popup) {
-      const client_width = document.getElementById(id)?.clientWidth || 1;
-      const x = event.nativeEvent.offsetX;
-      const position_x = Math.floor((x / client_width) * cols);
+  const showPopup = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    set_show_info_popup(true);
+  };
+  const hidePopup = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    set_show_info_popup(false);
+  };
+  const configPopup = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const { x, y } = event.nativeEvent;
+    const client_width = document.getElementById(id)?.clientWidth || 1;
+    const position_x = Math.floor((x / client_width) * cols);
+    const client_height = document.getElementById(id)?.clientHeight || 1;
+    const position_y = Math.floor((y / client_height) * rows);
 
-      const client_height = document.getElementById(id)?.clientHeight || 1;
-      const y = event.nativeEvent.offsetY;
-      const position_y = Math.floor((y / client_height) * rows);
-
-      set_info_popup_position({
-        col: position_x,
-        row: position_y,
-        x: (position_x + 1) * (client_width / cols),
-        y: (position_y + 1) * (client_height / rows),
-      });
-      set_show_info_popup((show_info_popup) => true);
-    } else {
-      set_show_info_popup((show_info_popup) => false);
-    }
+    set_info_popup_position({
+      col: position_x,
+      row: position_y,
+      x: (position_x + 1) * (client_width / cols),
+      y: (position_y + 1) * (client_height / rows),
+    });
   };
 
   useEffect(loadMap, [canvasRef.current]);
@@ -161,7 +159,12 @@ const Map: React.FC<IMap> = ({
     })
     .pop();
   return (
-    <div className="map" onMouseDown={togglePopup}>
+    <div
+      className="map"
+      onMouseMove={configPopup}
+      onMouseEnter={showPopup}
+      onMouseLeave={hidePopup}
+    >
       <canvas
         id={id}
         ref={canvasRef}

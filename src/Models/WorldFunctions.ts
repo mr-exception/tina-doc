@@ -76,23 +76,52 @@ const findBestFood = (cell: ICell, foods: IFood[] = []): IFood | undefined => {
     .pop();
 };
 
-const moveToPoint = (cell: ICell, position: IPosition): ICell => {
-  if (cell.position.x < position.x) {
+const getCellByPosition = (
+  position: IPosition,
+  cells: ICell[]
+): ICell | undefined =>
+  cells.find(
+    (cell: ICell) =>
+      cell.position.x === position.x && cell.position.y === position.y
+  );
+
+const moveToPoint = (
+  cell: ICell,
+  position: IPosition,
+  cells: ICell[]
+): ICell => {
+  if (
+    cell.position.x < position.x &&
+    getCellByPosition({ x: cell.position.x + 1, y: cell.position.y }, cells) ===
+      undefined
+  ) {
     cell.position.x++;
     cell.fuel -= 100 - cell.abillities.move;
     return cell;
   }
-  if (cell.position.x > position.x) {
+  if (
+    cell.position.x > position.x &&
+    getCellByPosition({ x: cell.position.x - 1, y: cell.position.y }, cells) ===
+      undefined
+  ) {
     cell.position.x--;
     cell.fuel -= 100 - cell.abillities.move;
     return cell;
   }
-  if (cell.position.y < position.y) {
+  if (
+    cell.position.y < position.y &&
+    getCellByPosition({ x: cell.position.x, y: cell.position.y + 1 }, cells) ===
+      undefined
+  ) {
     cell.position.y++;
     cell.fuel -= 100 - cell.abillities.move;
     return cell;
   }
-  if (cell.position.y > position.y) {
+  if (
+    cell.position.y > position.y &&
+    getCellByPosition({ x: cell.position.x, y: cell.position.y - 1 }, cells) ===
+      undefined
+  ) {
     cell.position.y--;
     cell.fuel -= 100 - cell.abillities.move;
     return cell;
@@ -120,7 +149,7 @@ export const singleCycle = (
   current_cells = current_cells.map((cell: ICell) => {
     const best_food: IFood | undefined = findBestFood(cell, current_foods);
     if (best_food) {
-      return moveToPoint(cell, best_food.position);
+      return moveToPoint(cell, best_food.position, current_cells);
     } else {
       cell.fuel -= 20;
       return cell;
